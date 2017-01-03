@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('templateApp').
+angular.module('<%= module %>').
 
 controller('MainCtrl', function ($scope, User) {
   var loginForm = {isOpen: false};

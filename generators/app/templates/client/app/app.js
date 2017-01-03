@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('templateApp', [
+angular.module('<%= module %>', [
   'ngResource',
   'ui.router',      // angular-ui router
   'ui.bootstrap'    // angular-ui bootstrap

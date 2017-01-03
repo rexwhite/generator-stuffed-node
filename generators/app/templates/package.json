@@ -1,7 +1,7 @@
 {
-  "name": "template",
+  "name": "<%= name %>",
   "version": "1.0.0",
-  "description": "Empty project template",
+  "description": "<%= description %>",
   "main": "server/app.js",
   "author": "",
   "license": "Apache-2.0",

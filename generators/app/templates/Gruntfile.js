@@ -201,7 +201,7 @@ module.exports = function (grunt) {
         src: ['**/*.html', '!index.html', '!bower_components/**/*.html'],
         dest: '.tmp/templates.js',
         options: {
-          module: 'templateApp',
+          module: '<%= module %>',
           htmlmin: {
             // keepClosingSlash:              true,  // enable this for svg
             collapseBooleanAttributes:     true,

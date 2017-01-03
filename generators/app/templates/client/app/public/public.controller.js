@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('templateApp').
+angular.module('<%= module %>').
 
 controller('PublicCtrl', function ($scope, $resource) {
   $scope.items = $resource('/api/public').query();

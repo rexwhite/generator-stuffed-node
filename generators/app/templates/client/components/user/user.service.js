@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('templateApp').
+angular.module('<%= module %>').
 
 service('User', function ($http) {
 

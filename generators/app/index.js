@@ -7,19 +7,28 @@ module.exports = Generator.extend({
   prompting: function () {
     // Have Yeoman greet the user.
     this.log(yosay(
-      'Welcome to the divine ' + chalk.red('generator-stuffed-node') + ' generator!'
+      'Welcome to the ' + chalk.red('stuffed-node') + ' generator!'
     ));
 
-    var prompts = [{
-      type: 'confirm',
-      name: 'someAnswer',
-      message: 'Would you like to enable this option?',
-      default: true
-    }];
+    var prompts = [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'Project name',
+        default: this.appname
+      },
+      {
+        type: 'input',
+        name: 'description',
+        message: 'Project description',
+        default: 'My groovy new project!'
+      }
+    ];
 
     return this.prompt(prompts).then(function (props) {
       // To access props later use this.props.someAnswer;
       this.props = props;
+      this.props.module = props.name + 'App';
     }.bind(this));
   },
 
@@ -28,7 +37,9 @@ module.exports = Generator.extend({
     this.fs.copyTpl(
       this.templatePath(),
       this.destinationPath(),
-      { globOptions: { dot: true } }
+      this.props,
+      {},
+      {globOptions: {dot: true}}
     );
 
     // copy non-template files (like .png's)
