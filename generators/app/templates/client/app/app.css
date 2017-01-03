@@ -1,0 +1,125 @@
+/* This is to fix bootstrap styling that would otherwise rely on empty hrefs, which are removed in *
+ * angular-bootstrap's directives.                                                                 */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+
+html, body {
+  height: 100%;
+}
+
+/* Make space for fixed navbar */
+body {
+  padding-top: 70px;
+}
+
+
+.navbar-fixed-top {
+  margin-bottom: 0px;
+}
+
+
+/* fix rounded corners on navbar and prevent ugly selection */
+.navbar-inverse {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+/* red selection indicators for selected menu items */
+.dropdown-menu > .active > a {
+  background-color: red;
+}
+
+.main-item {
+  border-bottom: 5px solid transparent;
+  margin-bottom: -5px;
+}
+
+.main-item > a {
+  padding-bottom: 10px;
+}
+
+.main-item.active {
+  border-bottom: 5px solid red;
+  margin-bottom: -5px;
+}
+
+.main-item.active > a {
+  padding-bottom: 10px;
+}
+
+/* centered navbar dropdown menu items */
+.dropdown-menu-centered {
+  text-align: center;
+  padding-top: 14px;
+}
+
+/* adjust spacing for forms in a dropdown menu */
+.dropdown-menu .navbar-form .form-group {
+  margin-bottom: 5px;
+}
+
+.dropdown-menu .navbar-form button {
+  margin-top: 5px;
+}
+
+/* ---- text ---- */
+.hr-text {
+  display: block;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 5px;
+}
+
+.hr-text > span {
+  position: relative;
+  display: inline-block;
+}
+
+.hr-text > span:before,
+.hr-text > span:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 9999px;
+  height: 1px;
+  background: black;
+}
+
+.hr-text > span:before {
+  right: 100%;
+  margin-right: 15px;
+}
+
+.hr-text > span:after {
+  left: 100%;
+  margin-left: 15px;
+}
+
+/* make login buttons the same width */
+.login-button {
+  width: 160px;
+}
+
+.footer {
+  width: 100%;
+  text-align: center;
+}
+
+.ui-body {
+  min-height: calc(100% - 25px);
+}
+
+.footer a {
+  margin: 10px;
+}
+
+.footer span {
+  border-right: thin solid black;
+}

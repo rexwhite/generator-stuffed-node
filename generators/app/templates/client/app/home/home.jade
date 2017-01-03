@@ -1,0 +1,22 @@
+.jumbotron.row
+  .col-md-8
+    .container
+      h1 I'm going for ferocious here, but I just don't feel it...
+      h3 But isn't this template impressive?
+      h4 (it means bootstrap is working... and jade, angular-ui router, and angular-ui bootstrap.)
+  .col-md-4
+    img.img-responsive(src="assets/images/t-rex.png")
+
+.container
+  uib-tabset
+    uib-tab(heading="Tab 1")
+      h3
+        // example of how to send a Google Analytics event
+        a(href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events")
+          | Google Analytics events:
+        button.btn.btn-warning(target="_blank" ng-click="ga('send', 'event', 'category', 'action', 'label');")
+          | Send an event!
+    uib-tab(heading="Tab 2")
+      h5 We could really use some more content here..
+
+

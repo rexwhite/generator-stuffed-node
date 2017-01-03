@@ -1,0 +1,17 @@
+.container
+  .jumbotron.login-jumbotron
+
+    form.form-horizontal(action="/auth/local" method="post")
+
+      .form-group
+        label.control-label.col-md-2 Username:<nbsp>
+        .col-md-8
+          input.form-control(type="text" name="username")
+
+      .form-group
+        label.control-label.col-md-2 Password:<nbsp>
+        .col-md-8
+          input.form-control(type="password" name="password")
+      //.col-md-10
+      //.col-md-2
+      button.btn.btn-primary.pull-right(type="submit") Login

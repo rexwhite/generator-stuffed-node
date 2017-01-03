@@ -1,0 +1,53 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "description": "Empty project template",
+  "main": "server/app.js",
+  "author": "",
+  "license": "Apache-2.0",
+  "repository": {},
+  "dependencies": {
+    "bcrypt": "^0.8.5",
+    "body-parser": "^1.15.0",
+    "compression": "^1.6.1",
+    "cookie-parser": "^1.4.1",
+    "cookie-session": "^2.0.0-alpha.1",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "jsonwebtoken": "^5.7.0",
+    "method-override": "^2.3.5",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "serve-favicon": "^2.3.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^6.6.0",
+    "connect-livereload": "^0.5.4",
+    "cssnano": "^3.9.1",
+    "grunt": "^0.4.5",
+    "grunt-angular-templates": "^1.1.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-jade": "^0.15.0",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-express-server": "^0.5.2",
+    "grunt-google-cdnify": "^0.1.1",
+    "grunt-injector": "^0.6.1",
+    "grunt-ng-annotate": "^3.0.0",
+    "grunt-postcss": "^0.8.0",
+    "grunt-sync": "^0.5.2",
+    "grunt-uncss": "^0.6.1",
+    "grunt-usemin": "^3.1.1",
+    "grunt-wiredep": "^2.0.0",
+    "load-grunt-tasks": "^3.4.0",
+    "postcss-uncss": "^0.14.0",
+    "uncss": "^0.14.1"
+  },
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": "~6.9.2"
+  }
+}

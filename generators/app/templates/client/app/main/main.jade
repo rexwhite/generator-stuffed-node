@@ -1,0 +1,106 @@
+nav.navbar.navbar-fixed-top.navbar-inverse
+  .container-fluid
+
+    // This is the main part of the navbar
+    .navbar-header
+
+      // This is the little "brand" item on the left
+      a.navbar-brand(ui-sref="main.home")
+        img(src="assets/images/xer-t.png" width="50")
+
+      // This is the three-bar button that gets displayed when the menu collapses for small viewports
+      button.navbar-toggle(ng-init="visible = false" ng-click="visible = !visible")
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+
+    // this is the part of the navbar that will get collapsed when the viewport is small enough
+    .navbar-collapse.collapse(ng-class="{in: visible}")
+
+      // each menu item is an item in this unordered list
+      ul.nav.navbar-nav
+
+        // "Public" menu item
+        li.main-item(ui-sref-active="active")
+          a(ui-sref="main.public")
+            h4 Public
+
+        // "Private" menu item
+        li.main-item(ui-sref-active="active")
+          a(ui-sref="main.private")
+            h4 Private
+
+        // "Components" Dropdown
+        li(uib-dropdown)
+          a(uib-dropdown-toggle)
+            h4 Components&nbsp
+              span.caret
+          ul.dropdown-menu(uib-dropdown-menu)
+            li(ui-sref-active="active")
+              a(ui-sref="main.public") Public
+            li(ui-sref-active="active")
+              a(ui-sref="main.private") Private
+
+            li.nav-divider
+
+            li.disabled(ui-sref-active="active")
+              a Dropdown Item 3
+
+      // "Login" / user item
+      ul.nav.navbar-nav.navbar-right
+
+        // Show the "login" menu if the user isn't logged in
+        li(uib-dropdown auto-close="outsideClick" is-open="loginForm.isOpen" ng-hide="user.loggedIn")
+          a(uib-dropdown-toggle)
+            h4 Login&nbsp
+              span.caret
+
+          ul.dropdown-menu.dropdown-menu-centered(uib-dropdown-menu)
+
+            // Google login button
+            li
+              button.btn.btn-danger.login-button Login with Google
+            .hr-text
+              span Or
+
+            // Facebook login button
+            li
+              button.btn.btn-primary.login-button Login with Facebook
+            .hr-text
+              span Or
+
+            // Username login form & button
+            li
+              form.navbar-form
+                .form-group
+                  input.form-control(type="text" ng-model="user.username" placeholder="Username")
+                .form-group
+                  input.form-control(type="password" ng-model="user.password" placeholder="Password")
+                button.btn.btn-warning.login-button(ng-click="login()") Login with Username
+
+        // Show user dropdown when user is logged in
+        li(uib-dropdown ng-hide="!user.loggedIn")
+          a(uib-dropdown-toggle)
+            h4 {{user.name}}&nbsp
+              span.caret
+
+          ul.dropdown-menu(uib-dropdown-menu)
+
+            // settings menu item
+            li
+              a Settings
+
+            li.nav-divider
+
+            // logout menu item
+            li
+              a(ng-click="user.logout()") Logout
+
+.ui-body
+  ui-view
+
+
+.footer
+  a Item One
+  span
+  a Item Two
