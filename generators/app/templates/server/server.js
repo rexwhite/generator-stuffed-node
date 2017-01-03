@@ -20,10 +20,10 @@ server.listen(config.port, config.ip, function () {
 //-----------------------------------------------
 // Use the code below if you want to force https
 //-----------------------------------------------
-var http = require('http');
+var redir = require('http');
 
-http.createServer(function(req, res){
-  res.writeHead(302,  {Location: 'https://macbook-pro-rex.local:9090' + req.url});
+redir.createServer(function(req, res){
+  res.writeHead(302,  {Location: 'https://localhost:9090' + req.url});
   res.end();
 }).listen(8000, function () {
   console.log('Redirecting port %d to https.', this.address().port);

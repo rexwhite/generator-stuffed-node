@@ -1,6 +1,6 @@
 {
   "name": "generator-stuffed-node",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A slightly more modern version of a MEAN fullstack app with lots of goodies.",
   "homepage": "https://github.com/rexwhite/generator-stuffed-node",
   "bugs": "https://github.com/rexwhite/generator-stuffed-node/issues",
