@@ -2,12 +2,9 @@
   "name": "generator-stuffed-node",
   "version": "0.1.1",
   "description": "A slightly more modern version of a MEAN fullstack app with lots of goodies.",
-  "homepage": "",
-  "author": {
-    "name": "Rex White",
-    "email": "rexwhite@gmail.com",
-    "url": ""
-  },
+  "homepage": "https://github.com/rexwhite/generator-stuffed-node",
+  "bugs": "https://github.com/rexwhite/generator-stuffed-node/issues",
+  "author": "Rex White",
   "files": [
     "generators"
   ],
@@ -40,8 +37,10 @@
       "mocha": true
     }
   },
-  "repository": "rexwhite/generator-stuffed-node",
-  "scripts": {
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rexwhite/generator-stuffed-node.git"
+  },"scripts": {
     "prepublish": "gulp prepublish",
     "test": "gulp"
   },
