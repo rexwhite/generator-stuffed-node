@@ -24,14 +24,23 @@ module.exports = Generator.extend({
   },
 
   writing: function () {
-    this.fs.copy(
-      this.templatePath('**'),
+    // copy template files
+    this.fs.copyTpl(
+      this.templatePath(),
       this.destinationPath(),
       { globOptions: { dot: true } }
     );
+
+    // copy non-template files (like .png's)
+    this.fs.copy(
+      this.templatePath('../fixed'),
+      this.destinationPath(),
+      { globOptions: { dot: true } }
+    );
+
   },
 
   install: function () {
-    this.installDependencies();
+    // this.installDependencies();
   }
 });
