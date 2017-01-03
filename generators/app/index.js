@@ -52,6 +52,6 @@ module.exports = Generator.extend({
   },
 
   install: function () {
-    // this.installDependencies();
+    this.installDependencies();
   }
 });
