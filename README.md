@@ -1,4 +1,4 @@
-# generator-stuffed-node [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-stuffed-node [![NPM version][npm-image]][npm-url]
 > A slightly more modern version of a MEAN fullstack app with lots of goodies.
 
 ## Installation
