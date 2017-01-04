@@ -2,6 +2,7 @@
 var Generator = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
+var camelCase = require('camel-case');
 
 module.exports = Generator.extend({
   prompting: function () {
@@ -28,7 +29,7 @@ module.exports = Generator.extend({
     return this.prompt(prompts).then(function (props) {
       // To access props later use this.props.someAnswer;
       this.props = props;
-      this.props.module = props.name + 'App';
+      this.props.module = camelCase(props.name + 'App');
     }.bind(this));
   },
 
