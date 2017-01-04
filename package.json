@@ -10,7 +10,16 @@
   ],
   "main": "generators/index.js",
   "keywords": [
-    "yeoman-generator"
+    "yeoman-generator",
+    "mean",
+    "angularjs",
+    "express",
+    "scaffold",
+    "fullstack",
+    "framework",
+    "component",
+    "front-end",
+    "app"
   ],
   "dependencies": {
     "camel-case": "^3.0.0",

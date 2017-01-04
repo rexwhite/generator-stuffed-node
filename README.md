@@ -1,5 +1,5 @@
 # generator-stuffed-node [![NPM version][npm-image]][npm-url]
-> A slightly more modern version of a MEAN fullstack app with lots of goodies.
+> A slightly more modern MEAN fullstack app with lots of goodies.
 
 ## Installation
 
