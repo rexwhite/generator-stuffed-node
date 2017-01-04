@@ -3,8 +3,12 @@
   "version": "0.1.0",
   "description": "<%= description %>",
   "main": "server/app.js",
-  "author": "",
-  "license": "Apache-2.0",
+  "author": {
+    "name": "<%= author %>",
+    "email": "<%= email %>",
+    "url": "<%= website %>"
+  },
+  "license": "",
   "repository": {},
   "dependencies": {
     "bcrypt": "^0.8.5",
