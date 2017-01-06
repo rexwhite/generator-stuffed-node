@@ -50,18 +50,29 @@ module.exports = Generator.extend({
       }
     ];
 
-    return this.prompt(prompts).then(function (props) {
-      // To access props later use this.props.someAnswer;
-      this.props = props;
-      this.props.module = camelCase(props.name + 'App');
+    return this.prompt(prompts)
 
-      // Get license type
-      this.composeWith(require.resolve('generator-license/app'), {
+      .then(function (props) {
+        // To access props later use this.props.someAnswer;
+        this.props = props;
+        this.props.module = camelCase(props.name + 'App');
+
+        // save values
+        this.config.set(this.props);
+
+        // Get license type
+        this.composeWith(require.resolve('generator-license/app'), {
           name: props.author,
           email: props.email,
           website: props.website
-      });
-    }.bind(this));
+        });
+
+        // handle GitHub/Lab repo creation
+        this.composeWith('stuffed-node:repo');
+      }
+
+      .bind(this));
+
   },
 
   writing: function () {
@@ -80,10 +91,9 @@ module.exports = Generator.extend({
       this.destinationPath(),
       { globOptions: { dot: true } }
     );
-
   },
 
   install: function () {
-    this.installDependencies();
+    // this.installDependencies();
   }
 });
