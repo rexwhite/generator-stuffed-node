@@ -15,19 +15,18 @@ var gitlab_config, gitc;
 
 
 module.exports = Generator.extend({
-  initializing: {
-    'gitlab_initializing' () {
+  initializing:
+    function gitlab_initializing () {
       return gitConfig.get().then(function (config) {
         this.project_config = this.config.getAll() || {};
         this.gitlab_config = this.config.get('gitlab') || {};
         this.gitc = config;
         this.gitc.user = this.gitc.user || {};
       }.bind(this));
-    }
-  },
+    },
 
-  prompting: {
-    'gitlab_prompting' () {
+  prompting:
+    function gitlab_prompting () {
       var prompts = [
         {
           type: 'input',
@@ -122,7 +121,7 @@ module.exports = Generator.extend({
 
             return this.prompt(prompts).
 
-            // create GitLab project...
+            // github-create GitLab project...
             then(function (answers) {
               this.gitlab_config['project_name'] = answers.projectname;
               this.gitlab_config['description'] = answers.description;
@@ -139,11 +138,10 @@ module.exports = Generator.extend({
 
       }.bind(this))
 
-    }
-  },
+    },
 
-  default: {
-    'gitlab_default' () {
+  default:
+    function gitlab_default () {
       this.log(chalk.cyan('\nCreating GitLab project...'));
 
       return create_project({
@@ -180,11 +178,10 @@ module.exports = Generator.extend({
 
       }.bind(this))
 
-    }
-  },
+    },
 
-  writing: {
-    'gitlab-writing' () {
+  writing:
+    function gitlab_writing () {
       // update package.json with repo info
       var pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
 
@@ -200,13 +197,12 @@ module.exports = Generator.extend({
       pkg.bugs = {
         url: pkg.homepage + '/issues'
       };
-      
-      this.fs.writeJSON(this.destinationPath('package.json'), pkg);
-    }
-  },
 
-  install: {
-    'gitlab_install' () {
+      this.fs.writeJSON(this.destinationPath('package.json'), pkg);
+    },
+
+  install:
+    function gitlab_install () {
       this.log(chalk.cyan('Creating initial commit and pushing to GitLab...'));
 
       // commit and push to GitLab
@@ -222,5 +218,4 @@ module.exports = Generator.extend({
       }.bind(this))
 
     }
-  }
 });

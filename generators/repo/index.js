@@ -4,8 +4,8 @@ var Generator = require('yeoman-generator');
 
 module.exports = Generator.extend({
 
-  prompting: {
-    repo_prompt () {
+  prompting:
+    function repo_prompt () {
       // handle git repo stuff
       var prompt = {
         type: 'list',
@@ -16,10 +16,10 @@ module.exports = Generator.extend({
             name: 'Nope',
             value: 'None'
           },
-          {
-            name: 'Yes, on GitHub',
-            value: 'GitHub'
-          },
+          // {
+          //   name: 'Yes, on GitHub',
+          //   value: 'GitHub'
+          // },
           {
             name: 'Yes, on GitLab',
             value: 'GitLab'
@@ -39,5 +39,4 @@ module.exports = Generator.extend({
         }
       }.bind(this));
     }
-  }
 });
