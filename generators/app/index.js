@@ -3,12 +3,14 @@ var Generator = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var camelCase = require('camel-case');
-var gitConfig = require('git-config');
+var gitConfig = require('gitconfig');
 
 module.exports = Generator.extend({
   initializing: function () {
-    this.gitc = gitConfig.sync();
-    this.gitc.user = this.gitc.user || {};
+    return gitConfig.get().then(function (config) {
+      this.gitc = config;
+      this.gitc.user = this.gitc.user || {};
+    }.bind(this));
   },
 
   prompting: function () {

@@ -35,7 +35,7 @@ module.exports = Generator.extend({
         }
 
         else if (answers.gitHost === 'GitLab') {
-          this.log('Create GitLab project');
+          this.composeWith('stuffed-node:gitlab');
         }
       }.bind(this));
     }
