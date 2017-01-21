@@ -36,6 +36,11 @@ redir.createServer(function(req, res){
 var https = require('https');
 var fs = require('fs');
 
+if (!fs.existsSync('server/certs/ws.key') || !fs.existsSync('server/certs/ws.cert')) {
+  console.log('Follow the directions in ./server/certs/README.md to create a certificate first.');
+  process.exit(1);
+}
+
 var options = {
   key: fs.readFileSync('server/certs/ws.key'),
   cert: fs.readFileSync('server/certs/ws.cert')
