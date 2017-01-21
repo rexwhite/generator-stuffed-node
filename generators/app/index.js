@@ -46,7 +46,7 @@ module.exports = Generator.extend({
         type: 'input',
         name: 'website',
         message: 'Company website (optional)',
-        store: true
+        default: this.gitc.user.website
       }
     ];
 
@@ -59,6 +59,13 @@ module.exports = Generator.extend({
 
         // save values
         this.config.set(this.props);
+
+        this.gitc.user.name = props.author;
+        this.gitc.user.email = props.email;
+        this.gitc.user.website = props.website;
+        
+        gitConfig.set(this.gitc, {location: 'global'}); // asynchronous
+
 
         // Get license type
         this.composeWith(require.resolve('generator-license/app'), {

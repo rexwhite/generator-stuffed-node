@@ -39,11 +39,12 @@ function set (key, val, options) {
       cmd += ' --' + options.location;
     }
 
-    queue.push(cmd + ' ' + key + ' ' + setting[key]);
+    queue.push(cmd + ' ' + key + ' "' + setting[key] + '"');
   }
 
   return Promise.each(queue, function (cmd) {
     return new Promise(function (resolve, reject) {
+      console.log('Running command: ' + cmd);
       childProcess.exec(cmd, function (err, stdout, stderr) {
         return (err || stderr) ? reject(err || stderr) : resolve(stdout);
       })
