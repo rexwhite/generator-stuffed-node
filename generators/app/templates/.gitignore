@@ -3,6 +3,7 @@
 dev
 prod
 client/bower_components
+server/certs
 .tmp
 node_modules
 npm-debug.log

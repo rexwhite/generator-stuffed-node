@@ -3,7 +3,7 @@ var Generator = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var camelCase = require('camel-case');
-var gitConfig = require('gitconfig');
+var gitConfig = require('../../gitconfig');
 
 module.exports = Generator.extend({
   initializing: function () {
@@ -15,9 +15,7 @@ module.exports = Generator.extend({
 
   prompting: function () {
     // Have Yeoman greet the user.
-    this.log(yosay(
-      'Welcome to the ' + chalk.red('stuffed-node') + ' generator!'
-    ));
+    this.log('Welcome to the ' + chalk.red('stuffed-node') + ' generator!');
 
     var prompts = [
       {

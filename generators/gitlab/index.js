@@ -3,7 +3,7 @@
 var chalk = require('chalk');
 var _ = require('lodash');
 var Generator = require('yeoman-generator');
-var gitConfig = require('gitconfig');
+var gitConfig = require('../../gitconfig');
 var shell = require('shellpromise');
 
 // local stuff...
