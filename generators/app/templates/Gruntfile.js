@@ -140,7 +140,7 @@ module.exports = function (grunt) {
 
       jade: {
         files: ['client/{app,components}/**/*.jade'],
-        tasks: ['clean:jade', 'jade', 'logger']
+        tasks: ['clean:jade', 'jade']
       },
 
       sync: {
