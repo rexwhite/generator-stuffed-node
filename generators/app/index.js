@@ -63,7 +63,7 @@ module.exports = Generator.extend({
         this.gitc.user.name = props.author;
         this.gitc.user.email = props.email;
         this.gitc.user.website = props.website;
-        
+
         gitConfig.set(this.gitc, {location: 'global'}); // asynchronous
 
 
@@ -101,6 +101,6 @@ module.exports = Generator.extend({
   },
 
   install: function () {
-    // this.installDependencies();
+    this.installDependencies();
   }
 });
