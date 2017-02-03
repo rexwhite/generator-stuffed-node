@@ -18,7 +18,7 @@ nav.navbar.navbar-fixed-top.navbar-inverse
     .navbar-collapse.collapse(ng-class="{in: visible}")
 
       // each menu item is an item in this unordered list
-      ul.nav.navbar-nav
+      ul.nav.navbar-nav(ng-click="visible = false")
 
         // "Public" menu item
         li.main-item(ui-sref-active="active")
