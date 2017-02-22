@@ -23,9 +23,9 @@ server.listen(config.port, config.ip, function () {
 var redir = require('http');
 
 redir.createServer(function(req, res){
-  res.writeHead(302,  {Location: 'https://localhost:9090' + req.url});
+  res.writeHead(302,  {Location: 'https://localhost:4333' + req.url});
   res.end();
-}).listen(8000, function () {
+}).listen(8080, function () {
   console.log('Redirecting port %d to https.', this.address().port);
 });
 
@@ -46,6 +46,6 @@ var options = {
   cert: fs.readFileSync('server/certs/ws.cert')
 };
 
-https.createServer(options, app).listen(9090, function() {
+https.createServer(options, app).listen(4333, function() {
   console.log('listening on port %d for https as well...', this.address().port);
 });
