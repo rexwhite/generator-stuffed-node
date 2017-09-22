@@ -1,0 +1,4 @@
+{
+  "dev": "dev-image-tag",
+  "prod": "prod-image-tag"
+}
