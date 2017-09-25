@@ -45,7 +45,10 @@
     "gulp-ng-annotate": "^2.0.0",
     "gulp-ng-templates": "0.0.10",
     "gulp-nodemon": "^2.2.1",
+    "gulp-preservetime": "^1.2.1",
     "gulp-uglify": "^3.0.0",
+    "gulp-usemin": "^0.3.28",
+    "gulp-util": "^3.0.8",
     "gulp-watch": "^4.3.11",
     "main-bower-files": "^2.13.1",
     "merge-stream": "^1.0.1",
@@ -55,6 +58,6 @@
     "start": "node server/server.js"
   },
   "engines": {
-    "node": "~6.9.2"
+    "node": "~6.11.3"
   }
 }

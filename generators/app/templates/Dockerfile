@@ -1,4 +1,4 @@
-FROM node:6.9.2
+FROM node:6.11.3
 
 RUN useradd --user-group --create-home --shell /bin/false app
 
@@ -8,8 +8,10 @@ ENV PORT=9000
 
 WORKDIR $HOME/site
 
-COPY . .
+COPY package.json .
 RUN npm install
+
+COPY . .
 
 USER app
 EXPOSE 9000

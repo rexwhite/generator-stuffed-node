@@ -4,21 +4,23 @@ require('array-includes').shim();  // because node 4.2.3 sucks....
 
 var fs = require('fs');
 var path = require('path');
+var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
 
 var gulp = require('gulp-help')(require('gulp'));
+
+var gutil = require('gulp-util');
 var watch = require('gulp-watch');
 var jade = require('gulp-jade');
 var filter = require('gulp-filter');
 var inject = require('gulp-inject');
 var bowerFiles = require('main-bower-files');
 var vfs = require('vinyl-fs');
-var chalk = require('chalk');
 var nodemon = require('gulp-nodemon');
 var livereload = require('gulp-livereload');
 
 var merge = require('merge-stream');
 var ngtemplates = require('gulp-ng-templates');
-var concat = require('gulp-concat');
 var annotate = require('gulp-ng-annotate');
 var uglify = require('gulp-uglify');
 var css_clean = require('gulp-clean-css');
@@ -29,8 +31,22 @@ var dom = require('gulp-dom');
 var git = require('gulp-git');
 var clean = require('gulp-dest-clean');
 var newer = require('gulp-newer');
-var spawn = require('child_process').spawn;
-var exec = require('child_process').exec;
+var preserve = require('gulp-preservetime');
+var usemin = require('gulp-usemin');
+
+var tags = require('./docker_branch_tags.json');
+
+var dockerTag = 'default';
+var gitBranch  = '';
+
+
+//-----------------------------------------------------------------------------
+
+
+gulp.task('clean:dev', false, function (){
+  return exec('rm -rf ./dev');
+});
+
 
 //-----------------------------------------------------------------------------
 
@@ -41,16 +57,65 @@ var _link = function () {
   pipe(vfs.symlink('dev'));
 };
 
-_link.description = chalk.dim.gray('Create symbolic link in dev dir to node_modules.');
+_link.description = gutil.colors.dim.gray('Create symbolic link in dev dir to node_modules.');
 
-gulp.task('link', _link.description, _link);
+gulp.task('link', _link.description, ['clean:dev'], _link);
+
+
+//-----------------------------------------------------------------------------
+
+
+// Copy project files to dev directory
+var _sync = function () {
+  var jade_flt = filter(['client/**/*.jade'], {restore: true});
+
+  return merge (
+    // sync server files
+    gulp.src(['server/**', 'package.json', 'LICENSE'], {base: '.'})
+    .pipe(gulp.dest('dev')),
+
+    // sync bower main files
+    gulp.src(bowerFiles(), {base: '.'})
+    .pipe(gulp.dest('dev')),
+
+    // sync non-injected js
+    domSrc({
+      file: 'client/index.html',
+      selector: 'script',
+      attribute: 'src',
+      options: {base: 'client', buffer: false}
+    })
+    .pipe(gulp.dest('dev/client')),
+
+    // sync non-injected css
+    domSrc({
+      file: 'client/index.html',
+      selector: 'link',
+      attribute: 'href',
+      options: {base: 'client', buffer: false}
+    })
+    .pipe(gulp.dest('dev/client')),
+
+    // sync other client files
+    gulp.src(['client/**', '!client/index.html', '!client/bower_components/**'], {base: '.'})
+    .pipe(jade_flt)
+    .pipe(jade())
+    .pipe(jade_flt.restore)
+    .pipe(gulp.dest('dev'))
+    .pipe(preserve())
+  )
+};
+
+_sync.description = gutil.colors.dim.gray('Copy files to ./dev.');
+
+gulp.task('sync', _sync.description, ['link'], _sync);
 
 
 //-----------------------------------------------------------------------------
 
 // inject project and vendor files into index.html
 var _inject = function () {
-  var stream =  gulp.src('client/index.html')
+  var stream = gulp.src('client/index.html')
 
   // inject app js & css
   .pipe(
@@ -70,6 +135,27 @@ var _inject = function () {
       gulp.src(bowerFiles(), {buffer: false, base: '.'}).pipe(gulp.dest('dev')),
       {
         name: 'bower',
+        removeTags: true,
+        ignorePath: 'dev/client',
+        addRootSlash: false
+      })
+  )
+
+  // create template.min.js file and inject
+  .pipe(
+    inject(                                 // inject ng-templates.js
+      gulp.src([
+        'dev/client/**/*.html',
+        '!dev/client/index.html',
+        '!dev/client/bower_components/**'
+      ])
+      .pipe(ngtemplates({                   // generate ng-template.js file
+        module: '<%= name %>',
+        standalone: false
+      }))
+      .pipe(gulp.dest('dev/client/app')),   // save generated ng-templates.js file
+      {
+        name: 'template',
         removeTags: true,
         ignorePath: 'dev/client',
         addRootSlash: false
@@ -106,59 +192,9 @@ var _inject = function () {
   return stream;
 };
 
-_inject.description = chalk.dim.gray('Inject css and scripts for app and bower components.');
+_inject.description = gutil.colors.dim.gray('Inject css and scripts for app and bower components.');
 
-gulp.task('inject', _inject.description, _inject);
-
-
-//-----------------------------------------------------------------------------
-
-
-// Copy project files to dev directory
-var _sync = function () {
-  var jade_flt = filter(['client/**/*.jade'], {restore: true});
-
-  exec('rm -rf ./dev');
-
-  return merge (
-    // sync server files
-    gulp.src(['server/**', 'package.json', 'LICENSE'], {base: '.'})
-    .pipe(gulp.dest('dev')),
-
-    // sync bower main files
-    gulp.src(bowerFiles(), {base: '.'})
-    .pipe(gulp.dest('dev')),
-
-    // sync non-injected js
-    domSrc({
-      file: 'client/index.html',
-      selector: 'script',
-      attribute: 'src',
-      options: {base: 'client', buffer: false}
-    })
-    .pipe(gulp.dest('dev/client')),
-
-    // sync non-injected css
-    domSrc({
-      file: 'client/index.html',
-      selector: 'link',
-      attribute: 'href',
-      options: {base: 'client', buffer: false}
-    })
-    .pipe(gulp.dest('dev/client')),
-
-    // sync other client files
-    gulp.src(['client/**', '!client/index.html', '!client/bower_components/**'], {base: '.'})
-    .pipe(jade_flt)
-    .pipe(jade())
-    .pipe(jade_flt.restore)
-    .pipe(gulp.dest('dev'))
-  )
-};
-
-_sync.description = chalk.dim.gray('Copy files to ./dev.');
-
-gulp.task('sync', _sync.description, ['link', 'inject'], _sync);
+gulp.task('inject', _inject.description, ['sync'], _inject);
 
 
 //-----------------------------------------------------------------------------
@@ -199,9 +235,9 @@ var _watch = function () {
   .pipe(livereload());
 };
 
-_watch.description = chalk.dim.gray('Keep ./dev files in sync.');
+_watch.description = gutil.colors.dim.gray('Keep ./dev files in sync.');
 
-gulp.task('watch', _watch.description, ['sync'], _watch);
+gulp.task('watch', _watch.description, ['inject'], _watch);
 
 
 //-----------------------------------------------------------------------------
@@ -217,7 +253,7 @@ var _serve = function () {
   });
 };
 
-_serve.description = chalk.green('Serve project.');
+_serve.description = gutil.colors.green('Serve project.');
 
 gulp.task('serve', _serve.description, ['watch'], _serve);
 
@@ -225,61 +261,28 @@ gulp.task('serve', _serve.description, ['watch'], _serve);
 //-----------------------------------------------------------------------------
 
 
-
-
-//=========================
-
 // create app.js (with html templates) & app.css [annotated & minified]
 function app () {
-  var js_flt = filter(['dev/client/**/*.js'], {restore: true});
-  var css_flt = filter(['dev/client/**/*.css'], {restore: true});
 
-  return merge(
-    // jade -> *html ==> template.js
-    gulp.src(['dev/client/**/*.html', '!dev/client/index.html', '!dev/client/bower_components/**'])
-      .pipe(ngtemplates({module: '<%= name %>', standalone: false})),
-
-    gulp.src(['dev/client/**/*.{js,css}', '!dev/client/bower_components/**'])
-  )
-
-    .pipe(js_flt)
-    .pipe(concat('app.js'))
-    .pipe(annotate())
-    .pipe(uglify())
-    .pipe(js_flt.restore)
-
-    .pipe(css_flt)
-    .pipe(concat('app.css'))
-    .pipe(css_clean())
-    .pipe(css_flt.restore)
-
-    .pipe(gulp.dest('dist/client'));  // --> dist/client/app.js
+  return gulp.src('dev/client/index.html')  // augment dev/client/index.html...
+  .pipe(usemin({
+    app_js: [annotate(), uglify()],
+    vendor_js: [uglify()],
+    app_css: [css_clean()],
+    vendor_css: [css_clean()]
+  }))
+  .pipe(gulp.dest('dist/client'));
 };
 
 //=========================
 
 // create vendor.js & vendor.css [minified]
 function vendor () {
-  var js_flt = filter(['client/**/*.js'], {restore: true});
-  var css_flt = filter(['client/**/*.css'], {restore: true});
   var other_flt = filter(['client/**/*.!(css|js|less|scss)'], {restore: true});
 
   return gulp.src(bowerFiles(), {base: 'client'})
-
-    .pipe(js_flt)
-    .pipe(concat('vendor.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('dist/client')) // --> dist/client/vendor.js
-    .pipe(js_flt.restore)
-
-    .pipe(css_flt)
-    .pipe(concat('vendor.css'))
-    .pipe(css_clean())
-    .pipe(gulp.dest('dist/client')) // --> dist/client/vendor.css
-    .pipe(css_flt.restore)
-
-    .pipe(other_flt)
-    .pipe(gulp.dest('dist/client'));
+  .pipe(other_flt)
+  .pipe(gulp.dest('dist/client'));
 };
 
 //=========================
@@ -288,28 +291,29 @@ function vendor () {
 function misc () {
   return merge (
     gulp.src([
-      'client/**/*',
-      '!client/bower_components/**/*',
-      '!client/**/*.{html,js,css}'
-      ], {nodir: true})
-    .pipe(clean('dist/client'))
-    .pipe(newer('dist/client'))
+      'dev/client/assets/**/*'
+    ], {nodir: true, base: 'dev/client/assets'})
+    .pipe(clean('dist/client/assets'))
+    .pipe(newer('dist/client/assets'))
     .pipe(imagemin())
-    .pipe(gulp.dest('dist/client'))
-    // TODO: .ico's?
+    .pipe(gulp.dest('dist/client/assets')),
+
+    gulp.src(['dev/client/*', '!dev/client/index.html'], {nodir: true, base: 'dev'})
+    .pipe(gulp.dest('dist'))
   )
 };
 
 //=========================
 
-gulp.task('sync:dist', false, ['sync'], function() {
+var _build = function () {
   return merge(
     app(),
     vendor(),
     misc(),
 
     gulp.src(['package.json', 'LICENSE', 'Dockerfile', '.dockerignore'])
-    .pipe(gulp.dest('dist')),
+    .pipe(gulp.dest('dist'))
+    .pipe(preserve()),
 
     gulp.src('server/**/*')
     .pipe(gulp.dest('dist/server')),
@@ -330,66 +334,59 @@ gulp.task('sync:dist', false, ['sync'], function() {
       options: {base: 'client', buffer: false}})
       .pipe(gulp.dest('dist/client'))
   )
-});
-
-//=========================
-
-var _build = function () {
-
-  // todo: gulp-useref files outside inject block but within build block into concatenated version and annotate/minify them here
-
-  var work = gulp.src('client/index.html')
-
-  .pipe(
-    inject(
-      gulp.src('dist/client/app.{js,css}', {read: false}),
-      {
-        name: 'app',
-        removeTags: true,
-        ignorePath: 'dist/client',
-        addRootSlash: false
-      })
-  )
-
-  .pipe(
-    inject(
-      gulp.src('dist/client/vendor.{js,css}', {read: false}),
-      {
-        name: 'bower',
-        removeTags: true,
-        ignorePath: 'dist/client',
-        addRootSlash: false
-      })
-  )
-
-  .pipe(gulp.dest('dist/client')); // --> dist/client/index.html
-
-  return work;
 };
 
-_build.decription = chalk.green('Build production version of project.');
-gulp.task('build', _build.decription, ['sync:dist'], _build);
+_build.description = gutil.colors.green('Build production version of project.');
+gulp.task('build', _build.description, ['inject'], _build);
 
 //=========================
 
-const tags = require('./docker_branch_tags.json');
-
-var _build_image = function (done) {
-  // docker build -t <tag-for-branch> .
+// Get docker tag for current git branch
+gulp.task('image:_tag', false, function (done) {
   git.revParse({args:'--abbrev-ref HEAD', quiet: true}, function (err, branch) {
     if (err) throw(err);
 
-    spawn('docker', ['build', '.', '-t', tags[branch]], {cwd: './dist', stdio: 'inherit'})
-      .on('exit', function () {
-        done();
-      });
+    gitBranch = branch;
+    dockerTag = tags[branch] || 'default';
+
+    done();
+  });
+});
+
+
+// Build Docker image with tag for current git branch
+var _image_build = function (done) {
+  gutil.log('Building image with tag:', gutil.colors.cyan(dockerTag));
+
+  return spawn('docker', ['build', '.', '-t', dockerTag], {cwd: './dist', stdio: 'inherit'})
+  .on('close', function () {
+    done();
   });
 };
 
-_build_image.decription = chalk.green('Build Docker image of dist.');
-gulp.task('build:image', _build_image.decription, ['build'], _build_image);
-// gulp.task('build:image', _build_image.decription, [], _build_image);
 
+_image_build.description = gutil.colors.green('Build tagged Docker image of dist.');
+gulp.task('image:build', _image_build.description, ['build', 'image:_tag'], _image_build);
+
+
+// Push docker image with tag for current git branch
+gulp.task('image:push', 'Push image with current tag.', ['image:_tag'], function (done) {
+  gutil.log('Pushing image:', gutil.colors.cyan(dockerTag));
+
+  return spawn('docker', ['push', dockerTag], {stdio: 'inherit'})
+  .on('close', function () {
+    done();
+  });
+});
+
+
+// Display Docker tag for current git branch
+gulp.task('image', 'Displays tag for current branch.', ['image:_tag'], function () {
+  console.log('\nTag for branch', gutil.colors.magenta(gitBranch), ':', gutil.colors.blue(dockerTag), '\n');
+  console.log(gutil.colors.underline('Usage'), '\n');
+  console.log(gutil.colors.cyan('  gulp image:build'), '- Build a tagged image with the contents of dist');
+  console.log(gutil.colors.cyan('  gulp image:push'), ' - Push tagged image\n');
+});
 
 //-----------------------------------------------------------------------------
 
